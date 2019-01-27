@@ -53,3 +53,21 @@ Log every attempted proof to a file using the debug flag.
 ```bash
 python mui.py --debug
 ```
+
+## Goals of the Project
+
+Although this is a silly little project, it's over-engineered in order to bring together much of what I've learned about Python and software engineering over the past 7 months.
+
+Heres a list of some of the topics I covered:
+
+- Debug logging
+- Multiprocessing
+- Python [data classes](https://docs.python.org/3/library/dataclasses.html)
+- Type hints and [Pyre](https://pyre-check.org/) type check
+- Software [design patterns](https://sourcemaking.com/design_patterns)
+- Python [regular expressions](https://regex101.com/#python)
+- [Argument parsing](https://docs.python.org/3/library/argparse.html)
+- Printing with color
+- Unit testing with [data driven tests](https://ddt.readthedocs.io/en/latest/example.html)
+- Programming with args and kwargs
+- Document and code styles
