@@ -22,7 +22,7 @@ class TheoremProver:
                  alphabet: str,
                  axioms: List[str]):
         """
-        Contruct TheoremProver.
+        Construct TheoremProver.
 
         :param alphabet: The letters from which theorems are composed.
         :param axioms: The axioms that are known to be true.
