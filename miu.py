@@ -18,8 +18,8 @@ if __name__ == '__main__':
     # conjecture = 'MIUIIIIU'
     halt = halting_criteria.HaltingCriteria()
 
-    # logger = miu_logging.get_logger('MIU.log')
     logger = None
+    # logger = miu_logging.get_logger('MIU.log')
     proof = prover.prove(conjecture, halt, logger=logger)
 
     if proof is None:
