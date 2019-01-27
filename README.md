@@ -31,3 +31,11 @@ To see every attempted proof uncomment the logging line in `miu.py` and see `MIU
 ## Conclusion
 
 There [exists a proof](https://en.wikipedia.org/wiki/MU_puzzle) for the non-existence of a `MI -> MU` proof, so this prover fails no matter how lenient the constraints.
+
+## Running with Other Conjectures
+
+You can also run the theorem prover with other conjectures that can be proven.
+
+```bash
+python miu.py --conjecture MIUIUU
+```

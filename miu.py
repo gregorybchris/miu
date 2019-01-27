@@ -1,21 +1,27 @@
 """Runs the theorem prover for the MIU problem."""
 
-import miu_logging
+import argparse
 
+import miu_logging
 import theorem_prover
 import miu_rules
 import halting_criteria
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--conjecture', default='MU',
+                        type=str, help='Conjecture to prove.')
+    args = parser.parse_args()
+
     language = 'MIU'
     axioms = ['MI']
     prover = theorem_prover.TheoremProver(language, axioms)
     for name, rule in miu_rules.rules.items():
         prover.register_rule(rule, name)
 
-    conjecture = 'MU'
-    # conjecture = 'MIUIIIIU'
+    conjecture = args.conjecture
     halt = halting_criteria.HaltingCriteria()
 
     logger = None
