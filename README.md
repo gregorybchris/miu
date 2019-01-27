@@ -38,7 +38,7 @@ Run the theorem prover with other conjectures.
 python miu.py --conjecture MIU
 ```
 
-User-defined constraints will terminate the theorem prover early.
+User-defined constraints terminate the theorem prover early.
 
 ```bash
 python mui.py --proof-length 8 --theorem-length 10
@@ -48,7 +48,7 @@ python mui.py --proof-length 8 --theorem-length 10
 python mui.py --timeout 3
 ```
 
-Log every attempted proof to a file use the debug flag.
+Log every attempted proof to a file using the debug flag.
 
 ```bash
 python mui.py --debug
