@@ -20,6 +20,8 @@ Output: `MU`
 
 ## Running the Theorem Prover
 
+**Note:** [Python 3.7](https://www.python.org/downloads/) is required.
+
 Run the `miu.py` script to test the theorem prover.
 
 ```bash
