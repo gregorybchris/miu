@@ -2,6 +2,7 @@
 
 import copy
 import logging
+import multiprocessing as mp
 import queue
 
 from halting_criteria import HaltingCriteria
@@ -48,7 +49,7 @@ class TheoremProver:
               conjecture: str,
               halting_criteria: HaltingCriteria,
               logger: Optional[logging.Logger] = None
-              )-> Optional[List[Tuple[str, str]]]:
+              ) -> Optional[List[Tuple[str, str]]]:
         """
         Prove a conjecture.
 
@@ -61,6 +62,35 @@ class TheoremProver:
         if len(self._rules) == 0:
             raise ValueError("Must register a rule before proving a theorem.")
 
+        result_queue = mp.Queue()
+        process_args = (conjecture, halting_criteria, logger, result_queue)
+        p = mp.Process(target=self._prove, args=process_args)
+        p.start()
+        timeout = halting_criteria.seconds
+        try:
+            result = result_queue.get(timeout=timeout)
+            p.join()
+        except queue.Empty:
+            p.terminate()
+            return None
+
+        return result
+
+    def _prove(self,
+               conjecture: str,
+               halting_criteria: HaltingCriteria,
+               logger: Optional[logging.Logger],
+               result_queue: mp.Queue
+               ) -> None:
+        """
+        Prove a conjecture.
+
+        Does a BFS to find the shortest proof that proves the conjecture.
+        :param conjecture: The conjecture to be proved.
+        :param halting_criteria: The method for halting the search for a proof.
+        :return: A list of rule_name, theorem where the last theorem is the
+            conjecture or None if there was no proof found.
+        """
         proof_queue = queue.Queue()
         for axiom in self._axioms:
             init_proof = [(TheoremProver.GIVEN, axiom)]
@@ -71,9 +101,9 @@ class TheoremProver:
         # Iterate over all possible proofs
         while not proof_queue.empty():
             proof = proof_queue.get()
-            if len(proof) > halting_criteria.depth:
-                return None
-            self._log_proof(proof, logger)
+            if len(proof) > halting_criteria.proof_length:
+                result_queue.put(None)
+                continue
             _, theorem = proof[-1]
             # Try all rules on the current proof
             for rule_name, rule in self._rules.items():
@@ -85,12 +115,14 @@ class TheoremProver:
                             new_proof = self._update_proof(proof,
                                                            rule_name,
                                                            new_theorem)
+                            self._log_proof(new_proof, logger)
                             if new_theorem == conjecture:
-                                return new_proof
+                                result_queue.put(new_proof)
+                                return
                             proof_queue.put(new_proof)
                             all_theorems.add(new_theorem)
         # No proof found
-        return None
+        result_queue.put(None)
 
     def _apply_rule(self,
                     rule: Callable[[str], List[str]],
@@ -106,5 +138,5 @@ class TheoremProver:
 
     def _log_proof(self, proof, logger):
         if logger is not None:
-            tabs = '  ' * len(proof)
+            tabs = '  ' * (len(proof) - 1)
             logger.info(f'{tabs}Proof: {proof}')

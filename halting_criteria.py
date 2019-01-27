@@ -7,5 +7,6 @@ from dataclasses import dataclass
 class HaltingCriteria:
     """Criteria to decide when to halt a TheoremProver."""
 
-    depth: int = 1000
-    theorem_length = 15
+    proof_length: int = 1000
+    theorem_length: int = 15
+    seconds: int = 3600
